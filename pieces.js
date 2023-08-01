@@ -6,10 +6,10 @@ const pieces = await reponse.json();
 const article = pieces[0]; // Move this line here
 
 const descriptionElement = document.createElement("p");
-descriptionElement.innerText = article.description ?? "Pas de description pour le moment."; // Corrected property name
+descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
 
 const stockElement = document.createElement("p");
-stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock"; // Corrected property name
+stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
 
 // Rattachement des balises au DOM
 const imageElement = document.createElement("img");
