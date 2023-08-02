@@ -1,3 +1,4 @@
+// Import du listener d'avis
 import { ajoutListenersAvis } from "./avis.js";
 
 // Récupération des pièces depuis le fichier JSON
@@ -15,17 +16,22 @@ function genererPieces(pieces){
         // Création des balises 
         const imageElement = document.createElement("img");
         imageElement.src = article.image;
+
         const nomElement = document.createElement("h2");
         nomElement.innerText = article.nom;
+
         const prixElement = document.createElement("p");
         prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
+        
         const categorieElement = document.createElement("p");
         categorieElement.innerText = article.categorie ?? "(aucune catégorie)";
+        
         const descriptionElement = document.createElement("p");
         descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
+        
         const stockElement = document.createElement("p");
         stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
-        //Code ajouté
+        
         const avisBouton = document.createElement("button");
         avisBouton.dataset.id = article.id;
         avisBouton.textContent = "Afficher les avis";
@@ -38,7 +44,6 @@ function genererPieces(pieces){
         pieceElement.appendChild(categorieElement);
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(stockElement);
-        //Code aJouté
         pieceElement.appendChild(avisBouton);
     
      }
@@ -69,7 +74,7 @@ boutonFiltrer.addEventListener("click", function () {
     genererPieces(piecesFiltrees);
 });
 
-//Correction Exercice
+
 const boutonDecroissant = document.querySelector(".btn-decroissant");
 
 boutonDecroissant.addEventListener("click", function () {
@@ -115,8 +120,8 @@ document.querySelector('.abordables')
     .appendChild(pElement)
     .appendChild(abordablesElements);
 
-//Code Exercice 
-const nomsDisponibles = pieces.map(piece => piece.nom)
+
+    const nomsDisponibles = pieces.map(piece => piece.nom)
 const prixDisponibles = pieces.map(piece => piece.prix)
 
 for(let i = pieces.length -1 ; i >= 0; i--){
