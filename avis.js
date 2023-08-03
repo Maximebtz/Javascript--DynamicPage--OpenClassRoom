@@ -4,25 +4,28 @@ export function ajoutListenersAvis() {
  
     for (let i = 0; i < piecesElements.length; i++) {
  
-     piecesElements[i].addEventListener("click", async function (event) {
- 
-        const id = event.target.dataset.id;
-        const reponse = await fetch("http://localhost:8081/pieces/" + id + "/avis");
-        const avis = await reponse.json();
-        const pieceElement = event.target.parentElement;
-
-        const avisElement = document.createElement("p");
-        for (let i = 0; i < avis.length; i++) {
-            avisElement.innerHTML += `<b>${avis[i].utilisateur}:</b> ${avis[i].commentaire} <br>`;
-        }
-        pieceElement.appendChild(avisElement);
- 
-     });
- 
+        piecesElements[i].addEventListener("click", async function (event) {
+    
+            const id = event.target.dataset.id;
+            const reponse = await fetch("http://localhost:8081/pieces/" + id + "/avis");
+            const avis = await reponse.json();
+            window.localStorage.setItem(`avis-piece-${id}`, JSON.stringify(avis))
+            const pieceElement = event.target.parentElement;
+        });
     }
- }
+}
  
- export function ajoutListenerEnvoyerAvis() {
+export function afficherAvis(pieceElement, avis){
+
+    const avisElement = document.createElement("p");
+    for (let i = 0; i < avis.length; i++) {
+        avisElement.innerHTML += `<b>${avis[i].utilisateur}:</b> ${avis[i].commentaire} <br>`;
+    }
+    pieceElement.appendChild(avisElement);
+    afficherAvis(pieceElement, avis)
+}
+
+export function ajoutListenerEnvoyerAvis() {
     const formulaireAvis = document.querySelector(".formulaire-avis");
     formulaireAvis.addEventListener("submit", function (event) {
     event.preventDefault();
@@ -35,6 +38,7 @@ export function ajoutListenersAvis() {
     };
     // Création de la charge utile au format JSON
     const chargeUtile = JSON.stringify(avis);
+    
     // Appel de la fonction fetch avec toutes les informations nécessaires
     fetch("http://localhost:8081/avis", {
         method: "POST",
@@ -43,4 +47,4 @@ export function ajoutListenersAvis() {
     });
     });
     
- }
+}
