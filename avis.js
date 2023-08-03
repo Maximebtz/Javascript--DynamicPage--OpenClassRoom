@@ -31,4 +31,12 @@ export function ajoutListenersAvis() {
  
     }
  }
+
+ export function ajoutListenerEnvoyerAvis() {
+    const formulaireAvis = document.querySelector(".formulaire-avis");
+    formulaireAvis.addEventListener("submit", function (event) {
+    /* ... */
+    });
+ }
+ 
  

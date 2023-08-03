@@ -5,6 +5,9 @@ body {
 	margin: auto;
 	padding: 16px;
 	font-family: 'Montserrat', sans-serif;
+	background-color: #222831;
+	color: white;
+
 }
 
 header {
@@ -65,4 +68,16 @@ main {
 }
 .fiches article h2 {
 	text-align: center;
+}
+button {
+	padding: 10px;
+	border: none;
+	margin: 10px;
+	border-radius: 20px;
+}
+input {
+	padding: 10px;
+	border: none;
+	margin: 10px;
+	border-radius: 20px;
 }
