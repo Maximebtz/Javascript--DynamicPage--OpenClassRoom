@@ -1,49 +1,51 @@
-import { ajoutListenersAvis, ajoutListenerEnvoyerAvis, afficherAvis } from "./avis.js";
-//Récupération des pièces eventuellement stockées dans le localStorage
+// Import des fonctions depuis le fichier "avis.js"
+import { ajoutListenersAvis, ajoutListenerEnvoyerAvis, afficherAvis, afficherGraphiqueAvis } from "./avis.js";
+
+// Récupération des pièces éventuellement stockées dans le localStorage
 let pieces = window.localStorage.getItem('pieces');
 
-if (pieces === null){
-    // Récupération des pièces depuis l'API
+// Vérification si les pièces existent dans le localStorage
+if (pieces === null) {
+    // Si les pièces n'existent pas dans le localStorage, on les récupère depuis l'API
     const reponse = await fetch('http://localhost:8081/pieces/');
     pieces = await reponse.json();
-    // Transformation des pièces en JSON
+    // Transformation des pièces en format JSON
     const valeurPieces = JSON.stringify(pieces);
-    // Stockage des informations dans le localStorage
+    // Stockage des informations dans le localStorage sous le nom "pieces"
     window.localStorage.setItem("pieces", valeurPieces);
-}else{
+} else {
+    // Si les pièces existent dans le localStorage, on les charge au format JSON
     pieces = JSON.parse(pieces);
 }
-// on appel la fonction pour ajouter le listener au formulaire
-ajoutListenerEnvoyerAvis()
 
-function genererPieces(pieces){
+// On appelle la fonction pour ajouter le listener au formulaire d'envoi d'avis
+ajoutListenerEnvoyerAvis();
+
+// Fonction pour générer les fiches de pièces dans le DOM
+function genererPieces(pieces) {
+    // Boucle pour parcourir toutes les pièces et créer les éléments du DOM correspondants
     for (let i = 0; i < pieces.length; i++) {
-
         const article = pieces[i];
-        // Récupération de l'élément du DOM qui accueillera les fiches
-        const sectionFiches = document.querySelector(".fiches");
-        // Création d’une balise dédiée à une pièce automobile
-        const pieceElement = document.createElement("article");
-        pieceElement.dataset.id = pieces[i].id
-        // Création des balises 
-        const imageElement = document.createElement("img");
-        imageElement.src = article.image;
-        const nomElement = document.createElement("h2");
-        nomElement.innerText = article.nom;
-        const prixElement = document.createElement("p");
-        prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`;
-        const categorieElement = document.createElement("p");
-        categorieElement.innerText = article.categorie ?? "(aucune catégorie)";
-        const descriptionElement = document.createElement("p");
-        descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
-        const stockElement = document.createElement("p");
-        stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
-        //Code ajouté
-        const avisBouton = document.createElement("button");
-        avisBouton.dataset.id = article.id;
-        avisBouton.textContent = "Afficher les avis";
-        
-        // On rattache la balise article a la section Fiches
+        const sectionFiches = document.querySelector(".fiches"); // Récupération de l'élément du DOM où les fiches seront insérées
+        const pieceElement = document.createElement("article"); // Création d'une balise <article> pour chaque pièce
+        pieceElement.dataset.id = pieces[i].id; // Définition d'un attribut "data-id" pour l'élément article avec l'ID de la pièce
+        const imageElement = document.createElement("img"); // Création d'une balise <img> pour afficher l'image de la pièce
+        imageElement.src = article.image; // Attribution de l'URL de l'image à la balise <img>
+        const nomElement = document.createElement("h2"); // Création d'une balise <h2> pour afficher le nom de la pièce
+        nomElement.innerText = article.nom; // Attribution du nom de la pièce au contenu de la balise <h2>
+        const prixElement = document.createElement("p"); // Création d'une balise <p> pour afficher le prix de la pièce
+        prixElement.innerText = `Prix: ${article.prix} € (${article.prix < 35 ? "€" : "€€€"})`; // Attribution du prix au contenu de la balise <p>
+        const categorieElement = document.createElement("p"); // Création d'une balise <p> pour afficher la catégorie de la pièce
+        categorieElement.innerText = article.categorie ?? "(aucune catégorie)"; // Attribution de la catégorie au contenu de la balise <p>
+        const descriptionElement = document.createElement("p"); // Création d'une balise <p> pour afficher la description de la pièce
+        descriptionElement.innerText = article.description ?? "Pas de description pour le moment."; // Attribution de la description au contenu de la balise <p>
+        const stockElement = document.createElement("p"); // Création d'une balise <p> pour afficher l'état de disponibilité de la pièce
+        stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock"; // Attribution de l'état de disponibilité au contenu de la balise <p>
+        const avisBouton = document.createElement("button"); // Création d'un bouton pour afficher les avis de la pièce
+        avisBouton.dataset.id = article.id; // Attribution de l'ID de la pièce au bouton pour une utilisation future
+        avisBouton.textContent = "Afficher les avis"; // Texte du bouton
+
+        // On ajoute les éléments au DOM en les plaçant dans la sectionFiches
         sectionFiches.appendChild(pieceElement);
         pieceElement.appendChild(imageElement);
         pieceElement.appendChild(nomElement);
@@ -51,25 +53,27 @@ function genererPieces(pieces){
         pieceElement.appendChild(categorieElement);
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(stockElement);
-        //Code aJouté
         pieceElement.appendChild(avisBouton);
-    
-     }
-     ajoutListenersAvis();
+    }
+    // Après avoir généré toutes les fiches, on ajoute les écouteurs d'avis
+    ajoutListenersAvis();
 }
 
+// On génère les fiches des pièces dans le DOM en utilisant la liste de pièces récupérée depuis le localStorage ou l'API
 genererPieces(pieces);
 
-for(let i = 0; i < pieces.length; i++){
+// On vérifie si des avis existent dans le localStorage pour chaque pièce, et on les affiche s'ils existent
+for (let i = 0; i < pieces.length; i++) {
     const id = pieces[i].id;
     const avisJSON = window.localStorage.getItem(`avis-piece-${id}`);
     const avis = JSON.parse(avisJSON);
 
-    if(avis !== null){
+    if (avis !== null) {
         const pieceElement = document.querySelector(`article[data-id="${id}"]`);
-        afficherAvis(pieceElement, avis)
+        afficherAvis(pieceElement, avis); // On affiche les avis associés à la pièce
     }
 }
+
 
  //gestion des boutons 
 const boutonTrier = document.querySelector(".btn-trier");
@@ -175,3 +179,5 @@ const boutonMettreAJour = document.querySelector(".btn-maj");
 boutonMettreAJour.addEventListener("click", function () {
    window.localStorage.removeItem("pieces");
 });
+
+await afficherGraphiqueAvis()
