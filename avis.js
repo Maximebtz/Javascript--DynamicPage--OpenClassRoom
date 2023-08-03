@@ -50,34 +50,34 @@ export function ajoutListenerEnvoyerAvis() {
     });
 }
 
-export async function afficherGraphiqueAvis(){
+
+export async function afficherGraphiqueAvis() {
     // Calcul du nombre total de commentaires par quantité d'étoiles attribuées
     const avis = await fetch("http://localhost:8081/avis").then(avis => avis.json());
     // Calculer le nb de commentaires pour chaque niveau d'étoiles de 1 à 5, tableau de 5 éléments initialisés à 0
     const nb_commentaires = [0, 0, 0, 0, 0];
-    // Parcourir les avis 
+
     for (let commentaire of avis) {
         // Incrémenter les éléments de la liste correspondante au nb d'étoiles attribuées
         nb_commentaires[commentaire.nbEtoiles - 1]++;
     }
-    // Légende qui s'affichera sur la gauche à coté de la barre horizontale
-    const labels = ["5", "4", "3", "2", "1"]
-    // Configurer les données et personnalisation du graphique
+    // Légende qui s'affichera sur la gauche à côté de la barre horizontale
+    const labels = ["5", "4", "3", "2", "1"];
+    // Données et personnalisation du graphique
     const data = {
         labels: labels,
-        dataset: [{
-            label: "Etoiles attribuées",
+        datasets: [{
+            label: "Étoiles attribuées",
             data: nb_commentaires.reverse(),
-            backgroudColor: "rgb(255,230,0,1)",
-
-        }]
-    }
+            backgroundColor: "rgba(255, 230, 0, 1)", // couleur jaune
+        }],
+    };
     // Objet de configuration final
     const config = {
         type: "bar",
         data: data,
         options: {
-        indexAxis: "y",
+            indexAxis: "y",
         },
     };
     // Rendu du graphique dans l'élément canvas
